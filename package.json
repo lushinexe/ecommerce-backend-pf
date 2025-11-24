@@ -1,0 +1,22 @@
+{
+  "name": "ecommerce-backend-pf",
+  "version": "1.0.0",
+  "description": "Proyecto final - Backend e-commerce",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/app.js",
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-handlebars": "^8.0.2",
+    "mongoose": "^9.0.0",
+    "mongoose-paginate-v2": "^1.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}

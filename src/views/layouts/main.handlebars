@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Ecommerce Astrotech</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+
+<body>
+    <nav>
+        <a href="/products">Productos</a>
+        {{#if cart}}
+        <a href="/carts/{{cart._id}}">🛒 Ver carrito</a>
+        {{/if}}
+    </nav>
+
+    {{{body}}}
+</body>
+
+</html>
