@@ -32,6 +32,16 @@ class UserDAO {
   static async getById(id) {
     return await UserModel.findById(id);
   }
+
+  // 🔹 Nuevo: actualizar contraseña
+  static async updatePassword(id, newPassword) {
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
+    return await UserModel.findByIdAndUpdate(
+      id,
+      { password: hashedPassword },
+      { new: true }
+    );
+  }
 }
 
 export default UserDAO;

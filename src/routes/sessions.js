@@ -39,8 +39,8 @@ const router = express.Router();
  */
 router.post(
   "/register",
-  registerValidator,   // 👈 array de middlewares
-  validationHandler,   // 👈 middleware que usa next()
+  registerValidator,
+  validationHandler,
   (req, res) => UserController.register(req, res)
 );
 
@@ -64,7 +64,7 @@ router.post(
  *                 type: string
  *     responses:
  *       200:
- *         description: Login exitoso, devuelve JWT
+ *         description: Login exitoso, devuelve JWT y datos del usuario
  *       401:
  *         description: Credenciales inválidas
  */
@@ -72,7 +72,13 @@ router.post(
   "/login",
   loginValidator,
   validationHandler,
-  (req, res) => UserController.login(req, res)
+  async (req, res) => {
+    const result = await UserController.login(req, res);
+    // Opcional: devolver también el usuario junto al token
+    // if (result?.token && result?.user) {
+    //   res.json({ status: "success", token: result.token, user: new UserDTO(result.user) });
+    // }
+  }
 );
 
 /**
@@ -95,7 +101,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const safeUser = new UserDTO(req.user);
-    res.json(safeUser);
+    res.json({ status: "success", user: safeUser });
   }
 );
 

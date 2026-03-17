@@ -13,11 +13,26 @@ class UserController {
 
   async login(req, res) {
     try {
-      const user = await UserService.login(req.body.email, req.body.password);
-      if (!user) return res.status(401).json({ error: "Invalid credentials" });
+      const { email, password } = req.body;
 
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-      res.json({ token });
+      // Validación rápida
+      if (!email || !password) {
+        return res.status(400).json({ error: "Email y contraseña son obligatorios" });
+      }
+
+      const user = await UserService.login(email, password);
+      if (!user) {
+        return res.status(401).json({ error: "Credenciales inválidas" });
+      }
+
+      // Generar token JWT
+      const token = jwt.sign(
+        { id: user._id, role: user.role }, // incluir rol puede ser útil
+        process.env.JWT_SECRET || "claveSecreta",
+        { expiresIn: "1h" }
+      );
+
+      res.json({ status: "success", token });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

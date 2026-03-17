@@ -9,6 +9,36 @@ const router = express.Router();
 
 /**
  * @openapi
+ * components:
+ *   schemas:
+ *     Product:
+ *       type: object
+ *       required:
+ *         - title
+ *         - description
+ *         - price
+ *         - stock
+ *         - category
+ *       properties:
+ *         title:
+ *           type: string
+ *           example: "Polera manga corta"
+ *         description:
+ *           type: string
+ *           example: "Polera de algodón"
+ *         price:
+ *           type: number
+ *           example: 4500
+ *         stock:
+ *           type: integer
+ *           example: 10
+ *         category:
+ *           type: string
+ *           example: "ropa"
+ */
+
+/**
+ * @openapi
  * /api/products:
  *   get:
  *     summary: Listar todos los productos
@@ -29,13 +59,7 @@ const router = express.Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               title: { type: string }
- *               description: { type: string }
- *               price: { type: number }
- *               stock: { type: integer }
- *               category: { type: string }
+ *             $ref: '#/components/schemas/Product'
  *     responses:
  *       201:
  *         description: Producto creado exitosamente
@@ -59,9 +83,17 @@ const router = express.Router();
  *         name: id
  *         required: true
  *         schema: { type: string }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
  *     responses:
  *       200:
  *         description: Producto actualizado
+ *       400:
+ *         description: Error de validación
  *       404:
  *         description: Producto no encontrado
  *
@@ -103,6 +135,11 @@ router.put(
   (req, res) => ProductController.update(req, res)
 );
 
-router.delete("/:id", authorization("admin"), (req, res) => ProductController.delete(req, res));
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  authorization("admin"),
+  (req, res) => ProductController.delete(req, res)
+);
 
 export default router;
